@@ -49,14 +49,20 @@ namespace TrippyWeapon
                     lensDistortion.active = overrideValue;
                     lensDistortion.intensity.overrideState = overrideValue;
                     lensDistortion.scale.overrideState = overrideValue;
-                    lensDistortion.intensity.value = Snippet.RemapClamp(valueOfDistorsion, 0f, 1f, lensDistortion.intensity.min, 1f);
-                    lensDistortion.scale.value = Mathf.Clamp(valueOfDistorsion + 1f, lensDistortion.scale.min, 1f);
-                    lensDistortion.intensity.value = Snippet.RemapClamp(valueOfDistorsion, 0f, 1f, 1f, lensDistortion.scale.min);
-                    lensDistortion.scale.value = Mathf.Clamp(valueOfDistorsion + 1f, lensDistortion.scale.min, 1f);
+                    //Go from 0 to -1f
+                    lensDistortion.intensity.value = Snippet.RemapClamp(valueOfDistorsion, 0f, 1f, 0f, lensDistortion.intensity.min);
+                    // Go from 1 to 0.1f
+                    lensDistortion.scale.value = Snippet.RemapClamp(valueOfDistorsion, 0f, 1f, 1f, 0.3f);
+                    //lensDistortion.intensity.value = Snippet.RemapClamp(valueOfDistorsion, 0f, 1f, 1f, lensDistortion.scale.min);
+                    //lensDistortion.scale.value = Mathf.Clamp(valueOfDistorsion + 1f, lensDistortion.scale.min, 1f);
                 }
             }
             else
             {
+                lensDistortion.intensity.value = 0f;
+                lensDistortion.scale.value = 1f;
+                lensDistortion.intensity.overrideState = overrideValue;
+                lensDistortion.scale.overrideState = overrideValue;
                 volume.enabled = overrideValue;
             }
         }

@@ -45,28 +45,19 @@ namespace TrippyWeapon
             }
         }
 
-        public override void OnUnload()
-        {
-            EventManager.onPossess -= EventManager_onPossess;
-        }
-
         /// <summary>
         /// When the item is grabbed, activate the post process effect.
         /// </summary>
-        private void OnItemGrabbed(Side side, Handle handle, float axisPosition, HandleOrientation orientation, EventTime eventTime)
+        private void OnItemGrabbed(Side side, Handle handle, float axisPosition, HandlePose orientation, EventTime eventTime)
         {
             // Is the event not OnEnd?
             if (eventTime != EventTime.OnEnd)
             {
                 return;
             }
-            if(handle.item.itemId.Contains("Bow"))
+            if(handle.item.itemId.Contains("Bow") && enableEffectOnBow)
             {
-                if (handle.item.gameObject.GetComponent<BowBehaviour>() == null)
-                {
-                    handle.item.gameObject.AddComponent<BowBehaviour>();
-                    handle.item.gameObject.GetComponent<BowBehaviour>().enableEffectOnBow = enableEffectOnBow;
-                }
+                handle.item.gameObject.GetOrAddComponent<BowBehaviour>().enableEffectOnBow = enableEffectOnBow;
             }
             if ((handle.item.data.type == ItemData.Type.Weapon || handle.item.data.type == ItemData.Type.Shield) && (!handle.item.itemId.Contains("Bow") && !handle.item.itemId.Contains("Arrow")) && enableEffectOnAllWeapon)
             {
@@ -92,10 +83,9 @@ namespace TrippyWeapon
             {
                 return;
             }
-            if (handle.item.itemId.Contains("Bow"))
+            if (handle.item.itemId.Contains("Bow") && !handle.name.Contains("String") && enableEffectOnBow)
             {
-                if(handle.item.gameObject.GetComponent<BowBehaviour>() != null)
-                    UnityEngine.Object.Destroy(handle.item.gameObject.GetComponent<BowBehaviour>());
+                handle.item.gameObject.GetOrAddComponent<BowBehaviour>().enableEffectOnBow = false;
             }
             if ((handle.item.data.type == ItemData.Type.Weapon || handle.item.data.type == ItemData.Type.Shield) && (!handle.item.itemId.Contains("Bow") && !handle.item.itemId.Contains("Arrow")) && enableEffectOnAllWeapon)
             {
@@ -110,5 +100,12 @@ namespace TrippyWeapon
                 }
             }
         }
+
+        public override void OnUnload()
+        {
+            EventManager.onPossess -= EventManager_onPossess;
+            EventManager.onUnpossess -= EventManager_onUnpossess;
+        }
+
     }
 }
